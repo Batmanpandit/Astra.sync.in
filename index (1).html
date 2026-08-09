@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astra Sync | Premium Digital Marketing & PR</title>
+    <!-- Premium Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-base: #050505;
+            --bg-surface: #111111;
+            --bg-surface-light: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --gold-primary: #d4af37;
+            --gold-gradient: linear-gradient(135deg, #f3e5ab 0%, #d4af37 50%, #b5952f 100%);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --glow: 0 0 20px rgba(212, 175, 55, 0.15);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- ANIMATIONS --- */
+        
+        /* 1. Ambient Breathing Background */
+        @keyframes breathe {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.6; }
+            33% { transform: scale(1.05) translate(2%, 2%); opacity: 0.8; }
+            66% { transform: scale(0.95) translate(-2%, -1%); opacity: 0.7; }
+            100% { transform: scale(1) translate(0, 0); opacity: 0.6; }
+        }
+
+        .ambient-glow {
+            position: fixed;
+            top: -20%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(212,175,55,0.08) 0%, rgba(0,0,0,0) 70%);
+            z-index: -1;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: breathe 15s ease-in-out infinite;
+        }
+
+        .ambient-glow-2 {
+            position: fixed;
+            bottom: -20%;
+            right: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0) 70%);
+            z-index: -1;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: breathe 18s ease-in-out infinite reverse;
+        }
+
+        /* 2. Scroll Reveal Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); /* Smooth snap-into-place curve */
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal-left.active, .reveal-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, .logo {
+            font-family: 'Syne', sans-serif;
+        }
+
+        /* Navigation (Glassmorphism) */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 5%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(5, 5, 5, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+            transition: all 0.3s ease;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: var(--gold-gradient);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid var(--gold-primary);
+            padding: 0.6rem 1.5rem;
+            border-radius: 30px;
+            color: var(--gold-primary) !important;
+        }
+        
+        .nav-btn::after { display: none; }
+        
+        .nav-btn:hover {
+            background: var(--gold-gradient);
+            color: #000 !important;
+            border-color: transparent;
+            box-shadow: var(--glow);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 5%;
+            position: relative;
+        }
+
+        .hero-badge {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: var(--gold-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            max-width: 900px;
+            font-weight: 800;
+        }
+
+        .hero h1 span {
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
+            color: var(--text-secondary);
+            max-width: 650px;
+            margin-bottom: 3rem;
+            font-weight: 300;
+        }
+
+        .btn-primary {
+            background: var(--gold-gradient);
+            color: #000;
+            padding: 1.2rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Services Grid */
+        .section-padding {
+            padding: 8rem 5%;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2.5rem, 4vw, 3.5rem);
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            padding: 3rem 2rem;
+            border-radius: 16px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(212,175,55,0.1), transparent 50%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(212, 175, 55, 0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .service-card:hover::before {
+            opacity: 1;
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover .service-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .service-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* Dual Forms Layout */
+        .forms-section {
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .forms-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .form-wrapper {
+            background: var(--bg-surface-light);
+            border: 1px solid var(--border-subtle);
+            padding: 3.5rem;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .form-wrapper:hover {
+            box-shadow: 0 30px 60px rgba(212,175,55,0.05);
+            border-color: rgba(212,175,55,0.2);
+        }
+
+        .form-wrapper h3 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-wrapper > p {
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 10px 0;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-bottom-color: var(--gold-primary);
+            box-shadow: 0 1px 0 var(--gold-primary);
+        }
+        
+        select.form-control {
+            background-color: var(--bg-surface-light);
+            cursor: pointer;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .checkbox-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .checkbox-label input[type="checkbox"]:checked {
+            background: var(--gold-gradient);
+            border-color: transparent;
+        }
+
+        .checkbox-label input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            color: #000;
+            font-size: 14px;
+            font-weight: bold;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .btn-submit {
+            width: 100%;
+            margin-top: 1rem;
+            background: #fff;
+            color: #000;
+            padding: 1rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background: var(--gold-gradient);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            background: #000;
+            padding: 4rem 5% 2rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer-brand p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            max-width: 300px;
+        }
+
+        .footer-links h4 {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold-primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-subtle);
+            color: rgba(255,255,255,0.4);
+            font-size: 0.85rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .form-wrapper {
+                padding: 2rem;
+            }
+            .checkbox-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .section-padding {
+                padding: 5rem 5%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow"></div>
+    <div class="ambient-glow-2"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo">Astra.sync</a>
+        <ul class="nav-links">
+            <li><a href="#services">Comprehensive Solutions</a></li>
+            <li><a href="#brands">Client & Investor Inquiry</a></li>
+            <li><a href="#influencers">Creator Roster</a></li>
+            <li><a href="#contact" class="nav-btn">Contact Us</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-badge reveal" style="transition-delay: 0.1s;">Full-Stack Digital Marketing & PR</div>
+        <h1 class="reveal" style="transition-delay: 0.2s;">Syncing Vision With <span>Extraordinary Growth</span></h1>
+        <p class="reveal" style="transition-delay: 0.3s;">Providing end-to-end digital infrastructure for brands and investors through strategic influencer alignments, commanding public relations, and data-driven performance marketing.</p>
+        <div class="reveal" style="transition-delay: 0.4s; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+            <a href="#brands" class="btn-primary">Partner & Invest</a>
+            <a href="#influencers" class="btn-primary" style="background: transparent; color: #fff; border: 1px solid var(--border-subtle);">Join Creator Roster</a>
+        </div>
+    </header>
+
+    <!-- Services Section -->
+    <section id="services" class="section-padding">
+        <div class="section-header reveal">
+            <h2>Comprehensive Solutions</h2>
+            <p>From high-level strategic deployment to precision creative execution, we offer the full spectrum of digital marketing services required to secure maximum market share.</p>
+        </div>
+        <div class="services-grid">
+            
+            <div class="service-card reveal" style="transition-delay: 0.1s;">
+                <div class="service-icon">📱</div>
+                <h3>Influencer Marketing</h3>
+                <p>Curated brand-creator alignments that cut through the noise. We build authentic campaigns engineered for maximum conversion and cultural impact.</p>
+            </div>
+            
+            <div class="service-card reveal" style="transition-delay: 0.2s;">
+                <div class="service-icon">📈</div>
+                <h3>Performance Marketing & Ads</h3>
+                <p>Strategic capital deployment across Meta, Google, and emerging platforms to guarantee measurable ROI and aggressively scale customer acquisition for investing brands.</p>
+            </div>
+
+            <div class="service-card reveal" style="transition-delay: 0.3s;">
+                <div class="service-icon">🎬</div>
+                <h3>Creative Video & Animation</h3>
+                <p>Bespoke digital video production and multi-shot sequencing. We utilize cinematic generation to craft striking visuals, ranging from standard ad formats to ASMR showcases and stop-motion designs.</p>
+            </div>
+            
+            <div class="service-card reveal" style="transition-delay: 0.4s;">
+                <div class="service-icon">📊</div>
+                <h3>Data Analytics & Strategy</h3>
+                <p>Transforming raw marketing metrics into actionable growth blueprints. We optimize your campaigns continuously using advanced data analysis to ensure efficient scaling.</p>
+            </div>
+
+            <div class="service-card reveal" style="transition-delay: 0.1s;">
+                <div class="service-icon">🔍</div>
+                <h3>SEO & Digital Footprint</h3>
+                <p>Dominating search engine results pages (SERPs) through rigorous technical optimization, commanding content creation, and sustainable organic growth strategies.</p>
+            </div>
+
+            <div class="service-card reveal" style="transition-delay: 0.2s;">
+                <div class="service-icon">💬</div>
+                <h3>Social Media Management</h3>
+                <p>End-to-end community building and strategic content calendar execution that fosters absolute brand loyalty and keeps your audience consistently engaged.</p>
+            </div>
+
+            <div class="service-card reveal" style="transition-delay: 0.3s;">
+                <div class="service-icon">⭐</div>
+                <h3>Personal Branding & PR</h3>
+                <p>Architecting industry authority. We secure high-tier media placements and transform executives into recognized thought leaders with a fortified reputation.</p>
+            </div>
+
+            <div class="service-card reveal" style="transition-delay: 0.4s;">
+                <div class="service-icon">🗳️</div>
+                <h3>Election & Political Strategy</h3>
+                <p>Sophisticated digital ground-games for political entities. From hyper-targeted voter outreach to comprehensive, real-time sentiment management.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Dual Forms Section -->
+    <section id="forms" class="section-padding forms-section">
+        <div class="section-header reveal">
+            <h2>Initiate a Sequence</h2>
+            <p>Select your path to sync with our team.</p>
+        </div>
+        <div class="forms-container">
+            
+            <!-- Brand Inquiry Form -->
+            <div class="form-wrapper reveal-left" id="brands">
+                <h3>For Brands & Investors</h3>
+                <p>Provide your investment parameters for a tailored strategy consultation.</p>
+                <form action="YOUR_FORM_ENDPOINT" method="POST">
+                    <div class="form-group">
+                        <label>Company / Brand Name</label>
+                        <input type="text" class="form-control" name="company_name" required placeholder="Acme Corp">
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Person</label>
+                        <input type="text" class="form-control" name="contact_name" required placeholder="Jane Doe">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 2rem;">
+                        <label>Target Services (Select all that apply)</label>
+                        <div class="checkbox-container">
+                            <label class="checkbox-label"><input type="checkbox" name="services" value="Influencer Marketing"> Influencer Marketing</label>
+                            <label class="checkbox-label"><input type="checkbox" name="services" value="Performance Ads"> Performance Ads</label>
+                            <label class="checkbox-label"><input type="checkbox" name="services" value="Video Production"> Video Production</label>
+                            <label class="checkbox-label"><input type="checkbox" name="services" value="Data Strategy"> Data Analytics</label>
+                            <label class="checkbox-label"><input type="checkbox" name="services" value="SEO & Social"> SEO & Social Media</label>
+                            <label class="checkbox-label"><input type="checkbox" name="services" value="PR & Branding"> PR & Branding</label>
+                            <label class="checkbox-label"><input type="checkbox" name="services" value="Election Support"> Election Support</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Initial Capital Allocation (Budget)</label>
+                        <select class="form-control" name="budget">
+                            <option value="" disabled selected>Select an investment tier</option>
+                            <option value="Under ₹50k">Under ₹50,000</option>
+                            <option value="₹50k - ₹2Lakh">₹50,000 - ₹2,00,000</option>
+                            <option value="₹2Lakh - ₹5Lakh">₹2,00,000 - ₹5,00,000</option>
+                            <option value="₹5Lakh+">₹5,00,000+</option>
+                            <option value="Consultation Needed">To be determined</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Project Objectives & ROI Goals</label>
+                        <textarea class="form-control" name="project_details" placeholder="Briefly describe what you intend to achieve..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">Request Strategy Call</button>
+                </form>
+            </div>
+
+            <!-- Influencer Application Form -->
+            <div class="form-wrapper reveal-right" id="influencers">
+                <h3>Creator Application</h3>
+                <p>Submit your metrics to be considered for our exclusive brand roster.</p>
+                <form action="YOUR_FORM_ENDPOINT" method="POST">
+                    <div class="form-group">
+                        <label>Legal Name</label>
+                        <input type="text" class="form-control" name="name" required placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label>Professional Email</label>
+                        <input type="email" class="form-control" name="email" required placeholder="hello@creator.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Primary Social Handle</label>
+                        <input type="text" class="form-control" name="social_handles" required placeholder="@username">
+                    </div>
+                    <div class="form-group">
+                        <label>Content Vertical (Niche)</label>
+                        <input type="text" class="form-control" name="niche" required placeholder="Tech, Fashion, Finance...">
+                    </div>
+                    <div class="form-group">
+                        <label>Total Audience Size</label>
+                        <select class="form-control" name="follower_tier">
+                            <option value="" disabled selected>Select tier</option>
+                            <option value="1k-10k">Nano (1k - 10k)</option>
+                            <option value="10k-50k">Micro (10k - 50k)</option>
+                            <option value="50k-500k">Mid-Tier (50k - 500k)</option>
+                            <option value="500k+">Macro (500k+)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-submit">Apply to Roster</button>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="reveal">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3>Astra.sync</h3>
+                <p>A premium digital agency specializing in high-impact influencer marketing, political strategy, and corporate public relations.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="#services">Comprehensive Solutions</a></li>
+                    <li><a href="#brands">For Brands & Investors</a></li>
+                    <li><a href="#influencers">For Creators</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Connect</h4>
+                <ul>
+                    <li><a href="mailto:Info.astra.sync@gmail.com">Info.astra.sync@gmail.com</a></li>
+                    <li><a href="https://wa.me/916377198462">WhatsApp Support</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Astra Sync. Founded by Aditya Sharma. Based in Rajasthan, India. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- INTERSECTION OBSERVER SCRIPT FOR ANIMATIONS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Setup the Intersection Observer
+            const observerOptions = {
+                root: null, // use viewport
+                rootMargin: '0px',
+                threshold: 0.15 // trigger when 15% of the element is visible
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Add the 'active' class to trigger CSS animation
+                        entry.target.classList.add('active');
+                        // Stop observing once animated (so it doesn't repeat every time they scroll up and down)
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            // Select all elements with reveal classes
+            const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+            
+            revealElements.forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
